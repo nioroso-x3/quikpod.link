@@ -45,8 +45,8 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
 
   mapping(address => uint256) public addressToAmountFunded;
   //stores last log command issued
-  mapping(address => bytes32) public addressToLastLog;
-  mapping(address => bytes32) public addressToLastBuildCode;
+  mapping(bytes32 => bytes32) public reqIdToLog;
+  mapping(bytes32 => bytes32) public reqIdToBuildCode;
   address[] public funders;
   
   function getPrice() public view returns(uint256){
@@ -80,8 +80,8 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
     Chainlink.Request memory req = buildChainlinkRequest(stringToBytes32(_jobId), address(this), this.fulfillBuildPod.selector);
     req.add("addr", toAsciiString(msg.sender));
     req.add("img", _img); //only httpd or ubuntu for now
-    req.add("name", _name);
-    req.add("cmd", _cmdurl);
+    req.add("name", _name); //up to 30 characters name
+    req.add("cmd", _cmdurl); //url with commands
     return sendChainlinkRequestTo(ORACLE, req, ORACLE_PAYMENT);
   }
   //get last 30 bytes of  docker logs.
@@ -104,14 +104,14 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
     recordChainlinkFulfillment(_requestId)
   {
     emit RequestBuildPodFulfilled(_requestId,_code);
-    addressToLastBuildCode[msg.sender] = _code;
+    reqIdToBuildCode[_requestId] = _code;
   }
   function fulfillLogsPod(bytes32 _requestId, bytes32 _logs)
     public
     recordChainlinkFulfillment(_requestId)
   {
     emit RequestLogsPodFulfilled(_requestId,_logs);
-    addressToLastLog[msg.sender] = _logs;
+    reqIdToLog[_requestId] = _logs;
   }
 
   function getChainlinkToken() public view returns (address) {
