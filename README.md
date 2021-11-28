@@ -6,7 +6,7 @@ Needs a VPS or other server with docker, mysql and python3 installed for hosting
 
 Use contract.sol and Remix to operate, no frontend yet.
 
-Contract is at 0x23237D8E9154BE303DE9f1039746a86F0D180Be2.
+Contract is at 0x467b87FF2870776efCa59f125E43486eb272e9f0.
 
 Job id for the build function is "d12216732aaa4bee8bb3785b62ddf4b6", for the logs function is "4728012b6d4c4ae5bae9d7444a433330"
 
