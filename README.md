@@ -4,11 +4,11 @@ Users will be able to run any command on a remote docker container and retrieve 
 
 Needs a VPS or other server with docker, mysql and python3 installed for hosting the docker containers.
 
-Use contract.sol and Remix to operate, no frontend yet.
+Use contract.sol and Remix on the kovan network to operate, no frontend yet.
 
 Contract is at 0x467b87FF2870776efCa59f125E43486eb272e9f0.
 
-Job id for the build function is "d12216732aaa4bee8bb3785b62ddf4b6", for the logs function is "4728012b6d4c4ae5bae9d7444a433330"
+Job id for the build function is "9bf9d1522f1f4ffdaa4a04756e083c3f", for the logs function is "4728012b6d4c4ae5bae9d7444a433330"
 
 Instructions:
 
@@ -16,7 +16,7 @@ Instructions:
 
 Use the requestBuilPod function, parameters are jobid, img (can be ubuntu or httpd for now), name (up to 32 ascii chars), and a url with a txt file for commands to load.
 Example parameters for running httpd service:
-jobId : d12216732aaa4bee8bb3785b62ddf4b6
+jobId : 9bf9d1522f1f4ffdaa4a04756e083c3f
 img : httpd
 name : TestHttp
 cmd : https://api.quikpod.link/static/cmd.txt
@@ -25,7 +25,7 @@ You will be able to access a http server running at the url "https://<your_eth_a
 
 2 - To make a single run docker container:
 Example parameters for running httpd service:
-jobId : d12216732aaa4bee8bb3785b62ddf4b6
+jobId : 9bf9d1522f1f4ffdaa4a04756e083c3f
 img : ubuntu
 name : TestSingleRun
 cmd : https://api.quikpod.link/static/cmd2.txt
