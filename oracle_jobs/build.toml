@@ -12,9 +12,9 @@ observationSource = """
     decode_cbor  [type=cborparse data="$(decode_log.data)"]
     fetch        [type=bridge name="link-build" requestData="{\\"id\\": $(jobSpec.externalJobID), \\"data\\": { \\"key\\": \\"xxxxxxxxxxxxxx\\",\\"addr\\": $(decode_cbor.addr),\\"img\\": $(decode_cbor.img),\\"name\\": $(decode_cbor.name),\\"cmd\\": $(decode_cbor.cmd)}}"]
     parse        [type=jsonparse path="data,code" data="$(fetch)"]
-    encode_data  [type=ethabiencode abi="(bytes value)" data="{ \\"value\\": $(parse) }"]
+    encode_data  [type=ethabiencode abi="(bytes32 value)" data="{ \\"value\\": $(parse) }"]
     encode_tx    [type=ethabiencode
-                  abi="fulfillOracleRequest(bytes32 requestId, uint256 payment, address callbackAddress, bytes4 callbackFunctionId, uint256 expiration, bytes data)"
+                  abi="fulfillOracleRequest(bytes32 requestId, uint256 payment, address callbackAddress, bytes4 callbackFunctionId, uint256 expiration, bytes32 data)"
                   data="{\\"requestId\\": $(decode_log.requestId), \\"payment\\": $(decode_log.payment), \\"callbackAddress\\": $(decode_log.callbackAddr), \\"callbackFunctionId\\": $(decode_log.callbackFunctionId), \\"expiration\\": $(decode_log.cancelExpiration), \\"data\\": $(encode_data)}"
                  ]
     submit_tx    [type=ethtx to="0x9C0383DE842A3A0f403b0021F6F85756524d5599" data="$(encode_tx)"]
