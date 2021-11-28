@@ -45,8 +45,10 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
 
   mapping(address => uint256) public addressToAmountFunded;
   //stores last log command issued
-  mapping(bytes32 => bytes32) public reqIdToLog;
+  mapping(bytes32 => bytes32) public reqIdToLogs;
   mapping(bytes32 => bytes32) public reqIdToBuildCode;
+  mapping(address => bytes32) public addrToLastBuildReqId;
+  mapping(address => bytes32) public addrToLastLogsReqId;
   address[] public funders;
   
   function getPrice() public view returns(uint256){
@@ -82,7 +84,9 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
     req.add("img", _img); //only httpd or ubuntu for now
     req.add("name", _name); //up to 30 characters name
     req.add("cmd", _cmdurl); //url with commands
-    return sendChainlinkRequestTo(ORACLE, req, ORACLE_PAYMENT);
+    bytes32 ret = sendChainlinkRequestTo(ORACLE, req, ORACLE_PAYMENT);
+    addrToLastBuildReqId[msg.sender] = ret;
+    return ret;
   }
   //get last 30 bytes of  docker logs.
   function requestLogsPod(string memory _jobId,string memory _name, string memory _regex)
@@ -96,9 +100,20 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
     req.add("addr", toAsciiString(msg.sender));
     req.add("name", _name);
     req.add("regex",_regex);
-    return sendChainlinkRequestTo(ORACLE, req, ORACLE_PAYMENT);
+    bytes32 ret = sendChainlinkRequestTo(ORACLE, req, ORACLE_PAYMENT);
+    addrToLastLogsReqId[msg.sender] = ret;
+    return ret;
   }
-
+  function ViewLastBuildCode() 
+    public view returns (bytes32)
+  {
+    return reqIdToBuildCode[addrToLastBuildReqId[msg.sender]];
+  }
+  function ViewLastLogs() 
+    public view returns (bytes32)
+  {
+    return reqIdToLogs[addrToLastLogsReqId[msg.sender]];
+  }
   function fulfillBuildPod(bytes32 _requestId, bytes32 _code)
     public
     recordChainlinkFulfillment(_requestId)
@@ -111,7 +126,7 @@ contract quikpod_kovan is ChainlinkClient, ConfirmedOwner {
     recordChainlinkFulfillment(_requestId)
   {
     emit RequestLogsPodFulfilled(_requestId,_logs);
-    reqIdToLog[_requestId] = _logs;
+    reqIdToLogs[_requestId] = _logs;
   }
 
   function getChainlinkToken() public view returns (address) {

@@ -6,7 +6,7 @@ Needs a VPS or other server with docker, mysql and python3 installed for hosting
 
 Use contract.sol and Remix on the kovan network to operate, no frontend yet.
 
-Contract is at 0x467b87FF2870776efCa59f125E43486eb272e9f0.
+Contract is at 0x4f626808E8d48632eef4B73878c267fECb6Ef111.
 
 Job id for the build function is "9bf9d1522f1f4ffdaa4a04756e083c3f", for the logs function is "4728012b6d4c4ae5bae9d7444a433330"
 
@@ -39,6 +39,8 @@ name : TestSingleRun
 regex : .*
 
 This will store 'hello world from quikpod.link' in the reqIdToLogs map, with the reqId as key.
+
+Uset the ViewLastLogs and ViewLastBuildCode functions to view the results.
 
 
 
